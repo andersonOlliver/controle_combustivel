@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:controle_combustivel/models/abastecimento.dart';
 import 'package:controle_combustivel/services/firestore_service.dart';
 import 'package:flutter/material.dart';
@@ -147,14 +148,17 @@ class _CadastroAbastecimentoPageState extends State<CadastroAbastecimentoPage> {
     var precoLitro = _precoLitroController.text;
     var qtdLitro = _quantidadeLitroController.text;
     var quilometragem = _quilometragemController.text;
+    var combustivel = this.combustivel == 1 ? 'Gasolina' : 'Álcool';
 
     var abastecimento = Abastecimento(
+        combustivel: combustivel,
         valorPago: double.parse(valorPago),
         precoLitro: double.parse(precoLitro),
         quantidadeLitros: double.parse(qtdLitro),
         quilometragem: double.parse(quilometragem));
 
-
-    await _firestoreService.adicionaAbastecimento(abastecimento);
+    _firestoreService
+        .adicionaAbastecimento(abastecimento)
+        .then((document) => Navigator.pop(context));
   }
 }

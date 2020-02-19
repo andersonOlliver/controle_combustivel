@@ -9,11 +9,19 @@ class FirestoreService {
 
   Future adicionaAbastecimento(Abastecimento abastecimento) async {
     try {
-      await _abastecimentoCollectionReference.add(abastecimento.toMap());
+      return await _abastecimentoCollectionReference.add(abastecimento.toMap());
     } catch (e) {
       debugPrint(e.toString());
       if (e is PlatformException) return e.message;
       return e.toString();
     }
+  }
+
+  Future<List<Abastecimento>> obtemAbastecimentos() async {
+    return (await _abastecimentoCollectionReference.getDocuments())
+        .documents
+        .map((snapshot) => Abastecimento.fromMap(snapshot.data))
+        .where((snapshot) => snapshot.valorPago != null)
+        .toList();
   }
 }
